@@ -2,11 +2,14 @@
 #---------------------------------------------------
 from pid_steven import PID
 from pid_height_control import PID as PID_z
+from pid_xyz import PID as PID_xyz
 import rospy
 from gazebo_msgs.msg import ModelStates
 from std_msgs.msg import Float64MultiArray, Float32
 from geometry_msgs.msg import Pose
 from tf.transformations import euler_from_quaternion
+
+
 #---------------------------------------------------
 def control_kwad(msg, args):
 	#Declare global variables as you dont want these to die, reset to zero and then re-initiate when the function is called again.
@@ -14,7 +17,6 @@ def control_kwad(msg, args):
 	
 	#Assign the Float64MultiArray object to 'f' as we will have to send data of motor velocities to gazebo in this format
 	f = Float64MultiArray()
-	
 
 	"""
 	Convert the quaternion data to roll, pitch, yaw data
@@ -36,7 +38,9 @@ def control_kwad(msg, args):
 	#Original PID controller from Nishanth
 	# (fUpdated, err_roll, err_pitch, err_yaw) = PID(roll, pitch, yaw, f)
 	#Height PID controller - Steven
-	(fUpdated, err_roll, err_pitch, err_yaw) = PID_z(roll, pitch, yaw, f, z)
+	# (fUpdated, err_roll, err_pitch, err_yaw) = PID_z(roll, pitch, yaw, f, z)
+	#Hover PID controller - Steven
+	(fUpdated, err_roll, err_pitch, err_yaw) = PID_xyz(roll, pitch, yaw, f, x, y, z)
 
 	
 	#The object args contains the tuple of objects (velPub, err_rollPub, err_pitchPub, err_yawPub) publish the information to 
@@ -50,6 +54,7 @@ def control_kwad(msg, args):
 
 #Initiate the node that will control the gazebo model
 rospy.init_node("Control")
+
 
 #initiate publishers that publish errors (roll, pitch,yaw - setpoint) so that it can be plotted via rqt_plot /err_<name>  
 err_rollPub = rospy.Publisher('err_roll', Float32, queue_size=1)
