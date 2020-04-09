@@ -1,0 +1,2 @@
+fly_bot
+-DCATKIN_DEVEL_PREFIX=/home/steven/6.832_Final_Project/uav_ws/devel -DCMAKE_INSTALL_PREFIX=/home/steven/6.832_Final_Project/uav_ws/install -G Unix Makefiles
