@@ -3,6 +3,7 @@
 from pid_steven import PID
 from pid_height_control import PID as PID_z
 from pid_xyz import PID as PID_xyz
+from pid_xyz_norpy import PID as PID_xyz_norp
 import rospy
 from gazebo_msgs.msg import ModelStates
 from std_msgs.msg import Float64MultiArray, Float32
@@ -37,10 +38,12 @@ def control_kwad(msg, args):
 	#Various Sources of Controller
 	#Original PID controller from Nishanth
 	# (fUpdated, err_roll, err_pitch, err_yaw) = PID(roll, pitch, yaw, f)
-	#Height PID controller - Steven
+	#Height PID controller - Steven  4/8
 	# (fUpdated, err_roll, err_pitch, err_yaw) = PID_z(roll, pitch, yaw, f, z)
-	#Hover PID controller - Steven
-	(fUpdated, err_roll, err_pitch, err_yaw) = PID_xyz(roll, pitch, yaw, f, x, y, z)
+	#Hover PID controller, tries to control all six states - slowly converges - Steven 4/9
+	# (fUpdated, err_roll, err_pitch, err_yaw) = PID_xyz(roll, pitch, yaw, f, x, y, z)
+	#Hover PID controller, tries to control x,y,z,yaw - slowly converges - Steven 4/9
+	(fUpdated, err_roll, err_pitch, err_yaw) = PID_xyz_norp(roll, pitch, yaw, f, x, y, z)
 
 	
 	#The object args contains the tuple of objects (velPub, err_rollPub, err_pitchPub, err_yawPub) publish the information to 
